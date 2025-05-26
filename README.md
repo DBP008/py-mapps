@@ -11,10 +11,10 @@ Radaelli, F., D’Alfonso, L., Collini, M., Mingozzi, F., Marongiu, L., Granucci
 ## 📂 Project Structure
 
 ```
-├── notebooks/
-│   └── pshg_simulation.py    # Marimo notebook for P-SHG simulation
 ├── src/
-│   └── mapps/                # Core simulation modules
+│   └── py-mapps.py           # Self-Standing Marimo Notebook + Functions for simulation
+├── scripts/
+│   └── build.py              # Deployment config
 ├── .github/workflows/        # CI/CD workflows
 └── README.md                 # Project documentation
 ```
