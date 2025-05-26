@@ -131,7 +131,7 @@ def _():
             if dist_sq < min_dist_sq:
                 min_dist_sq, est_gamma = dist_sq, gamma_val
         return est_gamma
-    return extract_gamma, extract_theta_F
+    
 
     def extract_gamma_vectorized(g_exp, s_exp, gamma_ref_tuples):
         if not gamma_ref_tuples:
