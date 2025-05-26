@@ -133,6 +133,34 @@ def _():
         return est_gamma
     return extract_gamma, extract_theta_F
 
+    def extract_gamma_vectorized(g_exp, s_exp, gamma_ref_tuples):
+        if not gamma_ref_tuples:
+            return np.full(g_exp.shape, -1)  # Return -1 for all inputs
+
+        gamma_vals_ref = np.array([t[0] for t in gamma_ref_tuples])
+        g_refs = np.array([t[1] for t in gamma_ref_tuples])
+        s_refs = np.array([t[2] for t in gamma_ref_tuples])
+
+        g_exp = np.asarray(g_exp)
+        s_exp = np.asarray(s_exp)
+
+        est_gammas = np.zeros_like(g_exp)
+
+        if g_exp.ndim == 0:
+            g_exp = g_exp[np.newaxis]
+            s_exp = s_exp[np.newaxis]
+
+        distances = (g_exp[:, np.newaxis] - g_refs[np.newaxis, :]) ** 2 + (
+            s_exp[:, np.newaxis] - s_refs[np.newaxis, :]
+        ) ** 2
+
+        min_dist_indices = np.argmin(distances, axis=1)
+
+        est_gammas = gamma_vals_ref[min_dist_indices]
+
+        return est_gammas
+    return extract_gamma, extract_gamma_vectorized, extract_theta_F
+
 
 @app.cell
 def _(get_gamma_phasor, get_theta_phasor):
