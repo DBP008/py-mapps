@@ -1,10 +1,10 @@
 # py-mapps
 
-**Live Demo**: [https://dbp008.github.io/py-mapps/](https://dbp008.github.io/py-mapps/)
+🚀 **Live Demo**: [Click HERE]([https://dbp008.github.io/py-mapps/](https://dbp008.github.io/py-mapps/src/py-mapps.html))
 
 **py-mapps** simulates the Polarization-Resolved Second Harmonic Generation (P-SHG) method from μMAPPS ([Radaelli et al., 2017](https://www.nature.com/articles/s41598-017-17726-y)) for pixel-wise analysis of collagen microstructure in tissues.
 
-## Citation 📚
+## 📚 Citation
 
 Radaelli, F., D’Alfonso, L., Collini, M., Mingozzi, F., Marongiu, L., Granucci, F., Zanoni, I., Chirico, G., & Sironi, L. (2017). μMAPPS: a novel phasor approach to second harmonic analysis for in vitro-in vivo investigation of collagen microstructure. *Scientific Reports*, 7, 17468. [https://doi.org/10.1038/s41598-017-17726-y](https://doi.org/10.1038/s41598-017-17726-y)
 
