@@ -177,13 +177,13 @@ def generate_gamma_ref_curve(
 def _():
     form_elements = mo.md(
         """
-        **Select Î¸ and Î³ to simulate P-SHG curve**
+        **Select θ and γ to simulate P-SHG curve**
 
-        Fiber Orientation Î¸_F = {theta_F_true_deg} deg
+        Fiber Orientation θ_F = {theta_F_true_deg} deg
 
-        Disorder Parameter Î³ = {gamma_true}
+        Disorder Parameter γ = {gamma_true}
 
-        Sampling step Î”Î¸_L = {delta_theta_deg} deg
+        Sampling step Δθ_L = {delta_theta_deg} deg
         """
     ).batch(
         theta_F_true_deg=mo.ui.slider(
@@ -229,7 +229,7 @@ def _(form_elements):
     if len(theta_L_full_rad) < 4:
         mo.md(
             f"""## Error
-    		Î”Î¸_L ({delta_theta_deg}Â°) is too large for a reliable P-SHG scan.
+    		Δθ_L ({delta_theta_deg}°) is too large for a reliable P-SHG scan.
     		Please choose a smaller sampling step.
     		<br>
     		Number of points: {len(theta_L_full_rad)} (need at least 4).
@@ -238,7 +238,7 @@ def _(form_elements):
 
     shg_exp_full = simulate_shg(theta_L_full_rad, theta_F_true_rad, gamma_true)
 
-    # --- Î¸-Phasor ---
+    # --- θ-Phasor ---
     g_th_exp, s_th_exp = get_theta_phasor(shg_exp_full, theta_L_full_rad)
     theta_F_pred_rad = extract_theta_F(g_th_exp, s_th_exp)
 
@@ -252,7 +252,7 @@ def _(form_elements):
     )
     df_theta_ref = df_theta_ref.sort(by="theta_F_val_rad")
 
-    # --- Î³-Phasor ---
+    # --- γ-Phasor ---
 
     gamma_ref_tuples = generate_gamma_ref_curve(
         theta_F_rad_for_ref=theta_F_pred_rad,
@@ -282,7 +282,7 @@ def _(form_elements):
         alt.Chart(df_shg_exp)
         .mark_line()
         .encode(
-            x=alt.X("theta_L_deg:Q", title="Î¸_L (deg)").scale(zero=False),
+            x=alt.X("theta_L_deg:Q", title="θ_L (deg)").scale(zero=False),
             y=alt.Y("intensity:Q", title="SHG Intensity").scale(zero=False),
             tooltip=["theta_L_deg", "intensity"],
         )
@@ -303,7 +303,7 @@ def _(form_elements):
         .encode(
             x=alt.X("g:Q", scale=alt.Scale(domain=phasor_domain), title="g"),
             y=alt.Y("s:Q", scale=alt.Scale(domain=phasor_domain), title="s"),
-            color=alt.Color("theta_F_val_rad", title="Ref Î¸ [rad]").scale(
+            color=alt.Color("theta_F_val_rad", title="Ref θ [rad]").scale(
                 scheme="rainbow"
             ),
             order="theta_F_val_rad",
@@ -319,7 +319,7 @@ def _(form_elements):
         {
             "g": [g_th_exp],
             "s": [s_th_exp],
-            "Î¸_F_pred": [np.rad2deg(theta_F_pred_rad)],
+            "θ_F_pred": [np.rad2deg(theta_F_pred_rad)],
         }
     )
     point_theta_exp = (
@@ -331,14 +331,14 @@ def _(form_elements):
             tooltip=[
                 alt.Tooltip("g:Q", format=".3f"),
                 alt.Tooltip("s:Q", format=".3f"),
-                alt.Tooltip("Î¸_F_pred:Q", format=".3f"),
+                alt.Tooltip("θ_F_pred:Q", format=".3f"),
             ],
         )
     )
     chart_theta_phasor = (
         alt.layer(line_theta_ref, point_theta_exp)
         .properties(
-            title=f"Î¸-Phasor Plot",
+            title=f"θ-Phasor Plot",
             width=plot_width,
             height=plot_height,
         )
@@ -356,7 +356,7 @@ def _(form_elements):
             color=alt.Color(
                 "gamma:Q",
                 scale=alt.Scale(scheme="viridis"),
-                legend=alt.Legend(title="Ref Î³"),
+                legend=alt.Legend(title="Ref γ"),
             ),
             tooltip=[
                 alt.Tooltip("g:Q", format=".3f"),
@@ -369,7 +369,7 @@ def _(form_elements):
         {
             "g": [g_ga_exp],
             "s": [s_ga_exp],
-            "Î³_pred": [gamma_pred],
+            "γ_pred": [gamma_pred],
         }
     )
     point_gamma_exp = (
@@ -381,14 +381,14 @@ def _(form_elements):
             tooltip=[
                 alt.Tooltip("g:Q", format=".3f"),
                 alt.Tooltip("s:Q", format=".3f"),
-                alt.Tooltip("Î³_pred:Q", format=".2f"),
+                alt.Tooltip("γ_pred:Q", format=".2f"),
             ],
         )
     )
     chart_gamma_phasor = (
         alt.layer(scatter_gamma_ref, point_gamma_exp)
         .properties(
-            title=f"Î³-Phasor Plot",
+            title=f"γ-Phasor Plot",
             width=plot_width,
             height=plot_height,
         )
@@ -401,12 +401,12 @@ def _(form_elements):
 
     output_md = mo.md(f"""
     ### Simulation & Prediction Summary:
-    - **Input Î¸_F**: {theta_F_true_deg:.1f}Â°
-    - **Input Î³**: {gamma_true:.2f}
-    - **Input Î”Î¸_L (sampling step)**: {delta_theta_deg}Â°
-    - **Predicted Î¸_F**: {float(np.rad2deg(theta_F_pred_rad)):.1f}Â° 
+    - **Input θ_F**: {theta_F_true_deg:.1f}°
+    - **Input γ**: {gamma_true:.2f}
+    - **Input Δθ_L (sampling step)**: {delta_theta_deg}°
+    - **Predicted θ_F**: {float(np.rad2deg(theta_F_pred_rad)):.1f}° 
       (from g={float(g_th_exp):.3f}, s={s_th_exp:.3f})
-    - **Predicted Î³ **: {float(gamma_pred):.2f} 
+    - **Predicted γ **: {float(gamma_pred):.2f} 
       (from g={float(g_ga_exp):.3f}, s={float(s_ga_exp):.3f})
     """)
     return combined_charts, output_md
