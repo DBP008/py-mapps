@@ -22,9 +22,9 @@ Radaelli, F., D’Alfonso, L., Collini, M., Mingozzi, F., Marongiu, L., Granucci
 ## 💾 Run Locally
 1. Install [uv](https://docs.astral.sh/uv/getting-started/installation/)
 2. Clone repo
-   `git clone https://github.com/DBP008/py-mapps.git`
+   ```git clone https://github.com/DBP008/py-mapps.git```
 3. Create a temporary marimo server (in edit mode) with `uvx`
-   `uvx marimo edit py-mapps\src\py_mapps.py`
+   ```uvx marimo edit py-mapps\src\py_mapps.py```
 
 ## ✨ Features
 
