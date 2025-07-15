@@ -1,0 +1,18 @@
+[project]
+name = "py-mapps"
+version = "0.1.0"
+description = "**py-mapps** simulates the Polarization-Resolved Second Harmonic Generation (P-SHG) method from μMAPPS ([Radaelli et al., 2017](https://www.nature.com/articles/s41598-017-17726-y)) for pixel-wise analysis of collagen microstructure in tissues."
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "altair>=5.5.0",
+    "ipython>=9.4.0",
+    "marimo>=0.14.10",
+    "numpy>=2.3.1",
+    "pandas>=2.3.1",
+    "polars>=1.31.0",
+    "python-lsp-ruff>=2.2.2",
+    "python-lsp-server>=1.13.0",
+    "ruff>=0.12.3",
+    "websockets>=15.0.1",
+]

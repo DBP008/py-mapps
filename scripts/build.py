@@ -99,7 +99,7 @@ def main() -> None:
             print(f"Warning: Directory not found: {dir_path}")
             continue
 
-        all_notebooks.extend(str(path) for path in dir_path.rglob("*.py"))
+        all_notebooks.extend(str(path) for path in dir_path.rglob("py_mapps.py")) # for all notebooks *.py
 
     if not all_notebooks:
         print("No notebooks found!")

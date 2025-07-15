@@ -1,6 +1,6 @@
 import marimo
 
-__generated_with = "0.13.6"
+__generated_with = "0.14.10"
 app = marimo.App(width="medium")
 
 with app.setup:
@@ -31,7 +31,7 @@ def simulate_shg(theta_L_rad, theta_F_rad, gamma, k=1, y0=0):
 
 
 @app.function
-def get_theta_phasor(shg_intensity_full, theta_L_full_rad):
+def get_theta_phasor(shg_intensity_full, theta_L_full_rad, harmonic=1):
     """Calculates (g,s) for theta-plot. Slices [0, pi) internally."""
     if len(shg_intensity_full) != len(theta_L_full_rad):
         print(f"shg len: {len(shg_intensity_full)}")
@@ -57,13 +57,15 @@ def get_theta_phasor(shg_intensity_full, theta_L_full_rad):
     if sum_I == 0:
         return 0.0, 0.0
 
-    g = np.real(dft[1]) / sum_I
-    s = -np.imag(dft[1]) / sum_I
+    g = np.real(dft[harmonic]) / sum_I
+    s = -np.imag(dft[harmonic]) / sum_I
     return g, s
 
 
 @app.function
-def get_gamma_phasor(shg_intensity_full, theta_L_full_rad, theta_F_pred_rad):
+def get_gamma_phasor(
+    shg_intensity_full, theta_L_full_rad, theta_F_pred_rad, harmonic=1
+):
     """Calculates (g,s) for gamma-plot. Infers delta_theta."""
     if len(shg_intensity_full) != len(theta_L_full_rad):
         print(
@@ -106,8 +108,8 @@ def get_gamma_phasor(shg_intensity_full, theta_L_full_rad, theta_F_pred_rad):
     if sum_I_seg == 0:
         return 0.0, 0.0
 
-    g = np.real(dft[1]) / sum_I_seg
-    s = -np.imag(dft[1]) / sum_I_seg
+    g = np.real(dft[harmonic]) / sum_I_seg
+    s = -np.imag(dft[harmonic]) / sum_I_seg
     return g, s
 
 
@@ -133,7 +135,7 @@ def extract_gamma(g_exp, s_exp, gamma_ref_tuples):
 
 @app.function
 def generate_theta_ref_curve(
-    gamma_for_ref, num_theta_F_pts, theta_L_full_rad_for_sim
+    gamma_for_ref, num_theta_F_pts, theta_L_full_rad_for_sim, harmonic=1
 ):
     """
     Generates theta-phasor reference curve tuples (theta_F_val, g, s).
@@ -146,7 +148,9 @@ def generate_theta_ref_curve(
             theta_L_full_rad_for_sim, th_F_iter_rad, gamma_for_ref
         )
 
-        g, s = get_theta_phasor(shg_ref_full, theta_L_full_rad_for_sim)
+        g, s = get_theta_phasor(
+            shg_ref_full, theta_L_full_rad_for_sim, harmonic=harmonic
+        )
         ref_tuples.append((th_F_iter_rad, g, s))
     return ref_tuples
 
@@ -158,6 +162,7 @@ def generate_gamma_ref_curve(
     gamma_start,
     gamma_end,
     theta_L_full_rad_for_sim,
+    harmonic=1,
 ):
     """Generates gamma-phasor reference curve tuples (gamma_val, g, s)."""
     gamma_values = np.linspace(gamma_start, gamma_end, num_gamma_pts)
@@ -167,7 +172,10 @@ def generate_gamma_ref_curve(
             theta_L_full_rad_for_sim, theta_F_rad_for_ref, gamma_iter
         )
         g, s = get_gamma_phasor(
-            shg_ref_full, theta_L_full_rad_for_sim, theta_F_rad_for_ref
+            shg_ref_full,
+            theta_L_full_rad_for_sim,
+            theta_F_rad_for_ref,
+            harmonic=1,
         )
         ref_tuples.append((gamma_iter, g, s))
     return ref_tuples
