@@ -19,19 +19,13 @@ def _():
     import polars as pl
     import numpy as np
     import altair as alt
-    return alt, get_gamma_phasor, mo, np, pl, simulate_shg
+    return alt, mo, np, pl, simulate_shg
 
 
 @app.cell
-def _(pl):
-    pl.Float64
-    return
-
-
-@app.cell
-def _(alt, get_gamma_phasor, mo, np, pl, simulate_shg):
-    theta_F_rad = np.deg2rad(30)  # Example fixed theta_F
-    gamma_values = np.linspace(0.1, 5, 5)  # Example gamma values
+def _(alt, mo, np, pl, simulate_shg):
+    theta_F_rad = np.deg2rad(44)  # Example fixed theta_F
+    gamma_values = np.linspace(0.01, 3, 10)  # Example gamma values
     theta_L_full_rad = np.linspace(0, 2 * np.pi, 100)
     harmonic = 2
 
@@ -42,9 +36,15 @@ def _(alt, get_gamma_phasor, mo, np, pl, simulate_shg):
     for gamma in gamma_values:
         shg_exp_full = simulate_shg(theta_L_full_rad, theta_F_rad, gamma)
 
-        g_ga_exp, s_ga_exp = get_gamma_phasor(
-            shg_exp_full, theta_L_full_rad, theta_F_rad, harmonic=harmonic
-        )
+        # g_ga_exp, s_ga_exp = get_gamma_phasor(
+        #     shg_exp_full, theta_L_full_rad, theta_F_rad, harmonic=harmonic
+        # )
+
+        dft = np.fft.fft(shg_exp_full)
+        g_ga_exp = np.real(dft[harmonic]) / np.abs(dft[0])
+        s_ga_exp = -np.imag(dft[harmonic]) / np.abs(dft[0])
+    
+    
         gamma_ref_tuples = [(gamma, g_ga_exp, s_ga_exp)]
 
         row = {
